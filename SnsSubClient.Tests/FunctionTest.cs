@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Xunit;
 using Amazon.Lambda.TestUtilities;
-using Amazon.Lambda.SQSEvents;
+using Amazon.Lambda.SNSEvents;
 
 using SnsSubClient;
 
@@ -16,13 +16,16 @@ namespace SnsSubClient.Tests
         [Fact]
         public async Task TestSQSEventLambdaFunction()
         {
-            var sqsEvent = new SQSEvent
+            var sqsEvent = new SNSEvent
             {
-                Records = new List<SQSEvent.SQSMessage>
+                Records = new List<SNSEvent.SNSRecord>
                 {
-                    new SQSEvent.SQSMessage
+                    new SNSEvent.SNSRecord
                     {
-                        Body = "foobar"
+                        Sns = new SNSEvent.SNSMessage
+                        {
+                            Message = "Test"
+                        }
                     }
                 }
             };
@@ -36,7 +39,7 @@ namespace SnsSubClient.Tests
             var function = new Function();
             await function.FunctionHandler(sqsEvent, context);
 
-            Assert.Contains("Processed message foobar", logger.Buffer.ToString());
+            Assert.Contains("Processed message Test", logger.Buffer.ToString());
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Amazon.Lambda.Core;
-using Amazon.Lambda.SQSEvents;
+using Amazon.Lambda.SNSEvents;
 
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -32,7 +32,7 @@ namespace SnsSubClient
         /// <param name="evnt"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public async Task FunctionHandler(SQSEvent evnt, ILambdaContext context)
+        public async Task FunctionHandler(SNSEvent evnt, ILambdaContext context)
         {
             foreach(var message in evnt.Records)
             {
@@ -40,9 +40,9 @@ namespace SnsSubClient
             }
         }
 
-        private async Task ProcessMessageAsync(SQSEvent.SQSMessage message, ILambdaContext context)
+        private async Task ProcessMessageAsync(SNSEvent.SNSRecord message, ILambdaContext context)
         {
-            context.Logger.LogLine($"Processed message {message.Body}");
+            context.Logger.LogLine($"Processed message {message.Sns.Message}");
 
             // TODO: Do interesting work based on the new message
             await Task.CompletedTask;
